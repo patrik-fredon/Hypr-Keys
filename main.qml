@@ -12,32 +12,9 @@ ApplicationWindow {
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool
     color: "transparent"
     
-    // Start position below the screen (hidden)
-    y: Screen.height
-    
-    // Position at bottom center of screen (final position)
+    // Start position at the bottom center of the screen (visible for testing)
+    y: Screen.height - mainWindow.height
     x: (Screen.width - width) / 2
-
-    // Animation for liquid popup effect
-    NumberAnimation {
-        id: showAnimation
-        target: mainWindow
-        property: "y"
-        from: Screen.height
-        to: Screen.height - mainWindow.height
-        duration: 300
-        easing.type: Easing.OutCubic
-    }
-
-    NumberAnimation {
-        id: hideAnimation
-        target: mainWindow
-        property: "y"
-        from: Screen.height - mainWindow.height
-        to: Screen.height
-        duration: 200
-        easing.type: Easing.InCubic
-    }
 
     // Main container with rounded top corners
     Rectangle {
@@ -70,7 +47,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 
                 Text {
-                    text: "Hypr-Keys"
+                    text: "fredon-modal-cheat"
                     font.pixelSize: 20
                     font.bold: true
                     color: "#cba6f7"

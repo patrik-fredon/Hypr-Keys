@@ -1,0 +1,12 @@
+/icons
+/icons/*
+
+/build
+/build/*
+
+
+bindings.conf
+
+.env
+.env.*
+

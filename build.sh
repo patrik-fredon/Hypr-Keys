@@ -21,7 +21,7 @@ if command -v cmake &> /dev/null; then
     cp "$SCRIPT_DIR/main.qml" "$SCRIPT_DIR/build/" 2>/dev/null || true
     
     echo "Build successful with CMake!"
-    echo "Executable is at: $SCRIPT_DIR/build/Hypr-Keys"
+    echo "Executable is at: $SCRIPT_DIR/build/hyprland-cheatsheet-popup-fredon"
     
 else
     echo "Error: CMake not found. Please install cmake."

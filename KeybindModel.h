@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QMap>
+#include <QFileInfo>
 
 // Structure to hold keybind data
 struct KeybindItem {
