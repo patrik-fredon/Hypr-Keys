@@ -33,3 +33,23 @@ install(TARGETS hyprland-cheatsheet-popup-fredon
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# Install QML file
+install(FILES main.qml DESTINATION ${CMAKE_INSTALL_DATADIR}/fredon-modal-cheat)
+
+# Install themes directory
+install(DIRECTORY themes/ 
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/fredon-modal-cheat/themes
+        FILES_MATCHING PATTERN "*.json")
+
+# Install scripts directory
+install(DIRECTORY scripts/ 
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/fredon-modal-cheat/scripts
+        FILES_MATCHING PATTERN "*.py")
+
+# Add a custom target for theme validation
+add_custom_target(validate-themes
+    COMMAND ${CMAKE_SOURCE_DIR}/scripts/validate-themes.py ${CMAKE_SOURCE_DIR}/themes
+    COMMENT "Validating theme files"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)

@@ -10,6 +10,8 @@
 #include <QDebug>
 #include <QCryptographicHash>
 #include <QSettings>
+#include <QFileSystemWatcher>
+#include <QDateTime>
 
 class ThemeManager : public QObject
 {
@@ -38,16 +40,25 @@ public:
     Q_INVOKABLE bool loadTheme(const QString &themeName);
     Q_INVOKABLE QStringList availableThemes() const;
     Q_INVOKABLE bool checkForThemeChanges();
+    Q_INVOKABLE bool previewTheme(const QString &themeName);
+    Q_INVOKABLE void applyPreviewedTheme();
+    Q_INVOKABLE bool exportTheme(const QString &themeName, const QString &filePath);
+    Q_INVOKABLE void setThemeDirectories(const QStringList &directories);
 
 signals:
     void themeChanged();
     void themeFileChanged(); // Signal emitted when theme file changes are detected
+    void themePreviewStarted();
+    void themePreviewEnded();
+    void themeLoadError(const QString &error);
 
 private:
     void loadDefaultTheme();
     bool loadThemeFromFile(const QString &filePath);
     QString calculateThemeFileHash(const QString &filePath);
     bool detectThemeChanges();
+    bool validateTheme(const QJsonObject &themeObj) const;
+    QColor getColorValue(const QJsonObject &themeObj, const QString &key, const QString &mKey) const;
     
     // Theme colors
     QColor m_primaryColor;
@@ -60,6 +71,29 @@ private:
     
     // Theme file tracking
     QString m_currentThemeHash;
+    QString m_currentThemeFile;
+    QStringList m_themeDirectories;
+    
+    // Theme preview
+    struct Theme {
+        QColor primaryColor;
+        QColor secondaryColor;
+        QColor backgroundColor;
+        QColor surfaceColor;
+        QColor textColor;
+        QColor accentColor;
+        QColor errorColor;
+    };
+    
+    Theme getCurrentTheme() const;
+    void restoreTheme(const Theme &theme);
+    
+    // File watching
+    QFileSystemWatcher *m_watcher;
+    void setupFileWatcher();
+    
+private slots:
+    void onThemeFileChanged(const QString &path);
 };
 
 #endif // THEMEMANAGER_H
