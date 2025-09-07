@@ -20,6 +20,11 @@ if command -v cmake &> /dev/null; then
     # Copy QML file to build directory
     cp "$SCRIPT_DIR/main.qml" "$SCRIPT_DIR/build/" 2>/dev/null || true
     
+    # Copy themes directory to build directory
+    if [ -d "$SCRIPT_DIR/themes" ]; then
+        cp -r "$SCRIPT_DIR/themes" "$SCRIPT_DIR/build/" 2>/dev/null || true
+    fi
+    
     echo "Build successful with CMake!"
     echo "Executable is at: $SCRIPT_DIR/build/hyprland-cheatsheet-popup-fredon"
     

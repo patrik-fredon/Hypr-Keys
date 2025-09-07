@@ -18,6 +18,8 @@ add_executable(hyprland-cheatsheet-popup-fredon
     main.cpp
     KeybindModel.cpp
     KeybindModel.h
+    ThemeManager.cpp
+    ThemeManager.h
 )
 
 # Link required libraries

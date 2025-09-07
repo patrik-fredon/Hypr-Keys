@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QCryptographicHash>
+#include <QSettings>
 
 class ThemeManager : public QObject
 {
@@ -35,13 +37,17 @@ public:
     // Methods
     Q_INVOKABLE bool loadTheme(const QString &themeName);
     Q_INVOKABLE QStringList availableThemes() const;
+    Q_INVOKABLE bool checkForThemeChanges();
 
 signals:
     void themeChanged();
+    void themeFileChanged(); // Signal emitted when theme file changes are detected
 
 private:
     void loadDefaultTheme();
     bool loadThemeFromFile(const QString &filePath);
+    QString calculateThemeFileHash(const QString &filePath);
+    bool detectThemeChanges();
     
     // Theme colors
     QColor m_primaryColor;
@@ -51,6 +57,9 @@ private:
     QColor m_textColor;
     QColor m_accentColor;
     QColor m_errorColor;
+    
+    // Theme file tracking
+    QString m_currentThemeHash;
 };
 
 #endif // THEMEMANAGER_H

@@ -12,21 +12,44 @@ ApplicationWindow {
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool
     color: "transparent"
     
-    // Start position at the bottom center of the screen (visible for testing)
-    y: Screen.height - mainWindow.height
+    // Start position below the screen (hidden)
+    y: Screen.height
+    
+    // Position at bottom center of screen (final position)
     x: (Screen.width - width) / 2
+
+    // Animation for liquid popup effect
+    NumberAnimation {
+        id: showAnimation
+        target: mainWindow
+        property: "y"
+        from: Screen.height
+        to: Screen.height - mainWindow.height
+        duration: 300
+        easing.type: Easing.OutCubic
+    }
+
+    NumberAnimation {
+        id: hideAnimation
+        target: mainWindow
+        property: "y"
+        from: Screen.height - mainWindow.height
+        to: Screen.height
+        duration: 200
+        easing.type: Easing.InCubic
+    }
 
     // Main container with rounded top corners
     Rectangle {
         id: mainContainer
         anchors.fill: parent
-        color: "#1e1e2e"
+        color: themeManager.backgroundColor
         opacity: 0.95
         radius: 20
         
         // Border
         border {
-            color: "#cba6f7"
+            color: themeManager.primaryColor
             width: 1
         }
     }
@@ -50,7 +73,7 @@ ApplicationWindow {
                     text: "fredon-modal-cheat"
                     font.pixelSize: 20
                     font.bold: true
-                    color: "#cba6f7"
+                    color: themeManager.primaryColor
                     Layout.alignment: Qt.AlignLeft
                 }
                 
@@ -62,14 +85,14 @@ ApplicationWindow {
                 Rectangle {
                     width: 30
                     height: 30
-                    color: "#313244"
+                    color: themeManager.surfaceColor
                     radius: 15
                     Layout.alignment: Qt.AlignRight
                     
                     Text {
                         anchors.centerIn: parent
                         text: "✕"
-                        color: "#f38ba8"
+                        color: themeManager.errorColor
                         font.pixelSize: 16
                     }
                     
@@ -87,15 +110,15 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
-            color: "#313244"
+            color: themeManager.surfaceColor
             radius: 8
             
             TextField {
                 anchors.fill: parent
                 anchors.margins: 8
                 placeholderText: "Search keybinds..."
-                color: "#cdd6f4"
-                placeholderTextColor: "#7f849c"
+                color: themeManager.textColor
+                placeholderTextColor: Qt.darker(themeManager.textColor, 1.5)
                 font.pixelSize: 14
                 background: Rectangle {
                     color: "transparent"
@@ -116,7 +139,7 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
-            color: "#313244"
+            color: themeManager.surfaceColor
             radius: 8
 
             RowLayout {
@@ -127,21 +150,21 @@ ApplicationWindow {
                     Layout.preferredWidth: 150
                     text: "Keybind"
                     font.bold: true
-                    color: "#cdd6f4"
+                    color: themeManager.textColor
                 }
 
                 Text {
                     Layout.preferredWidth: 200
                     text: "Command"
                     font.bold: true
-                    color: "#cdd6f4"
+                    color: themeManager.textColor
                 }
 
                 Text {
                     Layout.fillWidth: true
                     text: "Description"
                     font.bold: true
-                    color: "#cdd6f4"
+                    color: themeManager.textColor
                 }
             }
         }
@@ -166,7 +189,7 @@ ApplicationWindow {
                 delegate: Rectangle {
                     width: ListView.view.width
                     height: 50
-                    color: index % 2 === 0 ? "#45475a" : "#313244"
+                    color: index % 2 === 0 ? Qt.darker(themeManager.surfaceColor, 1.2) : themeManager.surfaceColor
                     radius: 6
 
                     RowLayout {
@@ -210,7 +233,7 @@ ApplicationWindow {
                                     Text {
                                         anchors.centerIn: parent
                                         text: "🔍"
-                                        color: "#f5c2e7"
+                                        color: themeManager.accentColor
                                         font.pixelSize: 14
                                     }
                                 }
@@ -219,7 +242,7 @@ ApplicationWindow {
                                     text: model.keybind
                                     font.bold: true
                                     font.pixelSize: 14
-                                    color: "#f5c2e7"
+                                    color: themeManager.accentColor
                                     Layout.alignment: Qt.AlignVCenter
                                 }
                             }
@@ -230,7 +253,7 @@ ApplicationWindow {
                             Layout.preferredWidth: 200
                             text: model.name
                             font.pixelSize: 14
-                            color: "#89b4fa"
+                            color: themeManager.secondaryColor
                             elide: Text.ElideRight
                             Layout.alignment: Qt.AlignVCenter
                         }
@@ -240,7 +263,7 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             text: model.description
                             font.pixelSize: 14
-                            color: "#cdd6f4"
+                            color: themeManager.textColor
                             wrapMode: Text.WordWrap
                             Layout.alignment: Qt.AlignVCenter
                             elide: Text.ElideRight
@@ -255,7 +278,7 @@ ApplicationWindow {
                     contentItem: Rectangle {
                         implicitWidth: 10
                         radius: width / 2
-                        color: "#585b70"
+                        color: Qt.darker(themeManager.surfaceColor, 1.5)
                     }
                 }
             }
@@ -280,12 +303,12 @@ ApplicationWindow {
                         }
                     }
                     background: Rectangle {
-                        color: enabled ? "#89b4fa" : "#313244"
+                        color: enabled ? themeManager.secondaryColor : themeManager.surfaceColor
                         radius: 6
                     }
                     contentItem: Text {
                         text: "◀"
-                        color: enabled ? "#11111b" : "#585b70"
+                        color: enabled ? themeManager.backgroundColor : Qt.darker(themeManager.surfaceColor, 1.5)
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: 14
@@ -294,7 +317,7 @@ ApplicationWindow {
 
                 Text {
                     text: (keybindModel.currentPage + 1) + " / " + keybindModel.totalPages
-                    color: "#cdd6f4"
+                    color: themeManager.textColor
                     font.pixelSize: 14
                     Layout.alignment: Qt.AlignVCenter
                 }
@@ -308,12 +331,12 @@ ApplicationWindow {
                         }
                     }
                     background: Rectangle {
-                        color: enabled ? "#cba6f7" : "#313244"
+                        color: enabled ? themeManager.primaryColor : themeManager.surfaceColor
                         radius: 6
                     }
                     contentItem: Text {
                         text: "▶"
-                        color: enabled ? "#11111b" : "#585b70"
+                        color: enabled ? themeManager.backgroundColor : Qt.darker(themeManager.surfaceColor, 1.5)
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: 14

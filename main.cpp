@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QDebug>
 #include "KeybindModel.h"
+#include "ThemeManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,24 +29,19 @@ int main(int argc, char *argv[])
     KeybindModel *keybindModel = new KeybindModel(&engine);
     engine.rootContext()->setContextProperty("keybindModel", keybindModel);
     
-    // Try to load QML file from the application directory first
+    // Create and expose the theme manager to QML
+    ThemeManager *themeManager = new ThemeManager(&engine);
+    engine.rootContext()->setContextProperty("themeManager", themeManager);
+    
+    // List available themes
+    QStringList themes = themeManager->availableThemes();
+    qDebug() << "Available themes:" << themes;
+    
+    // Determine QML file path
     QString appDir = QCoreApplication::applicationDirPath();
-    QString qmlPath = appDir + "/simple.qml";  // Try simple.qml first
+    QString qmlPath = appDir + "/test.qml";
     
-    // If not found, try current directory
-    if (!QFile::exists(qmlPath)) {
-        qmlPath = "simple.qml";
-    }
-    
-    // If simple.qml doesn't exist, try minimal.qml
-    if (!QFile::exists(qmlPath)) {
-        qmlPath = appDir + "/minimal.qml";
-        if (!QFile::exists(qmlPath)) {
-            qmlPath = "minimal.qml";
-        }
-    }
-    
-    // If neither simple.qml nor minimal.qml exist, try main.qml
+    // If test.qml doesn't exist, try main.qml
     if (!QFile::exists(qmlPath)) {
         qmlPath = appDir + "/main.qml";
         if (!QFile::exists(qmlPath)) {
